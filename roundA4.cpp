@@ -212,3 +212,141 @@ int main()
         solve(i);
 }
 
+
+/*
+-----------------------------------------------------------------------------
+Author :            ---------------------------------------------------------
+    UTKAR$H $AXENA  ---------------------------------------------------------
+    IIT INDORE      ---------------------------------------------------------
+-----------------------------------------------------------------------------
+*/
+#include<bits/stdc++.h>
+#include<iostream>
+using namespace std;
+#define fre 	freopen("0.in","r",stdin),freopen("0.out","w",stdout)
+#define abs(x) ((x)>0?(x):-(x))
+#define MOD 1000000007
+#define lld signed long long int
+#define pp pop_back()
+#define ps(x) push_back(x)
+#define mpa make_pair
+#define pii pair<int,int>
+#define fi first
+#define se second
+#define scan(x) scanf("%d",&x)
+#define print(x) printf("%d\n",x)
+#define scanll(x) scanf("%lld",&x)
+#define printll(x) printf("%lld\n",x)
+#define boost ios_base::sync_with_stdio(0)
+//vector<int> g[2*100000+5];int par[2*100000+5];
+deque<pii >Q;
+set<pii >snake,food;
+int alright,direction,T,R,C;
+void play(){
+	pii head = Q.front();
+	pii to;
+	switch(direction){
+	case 1:
+		to = mpa(head.fi-1,head.se);
+		break;
+	case 2:
+		to = mpa(head.fi,head.se+1);
+		break;
+	case 3:
+		to = mpa(head.fi+1,head.se);
+		break;
+	case 4:
+		to = mpa(head.fi,head.se-1);
+		break;
+	}
+	if(to.fi==0)
+		to.fi=R;
+	if(to.fi==R+1)
+		to.fi=1;
+
+	if(to.se==0)
+		to.se=C;
+	if(to.se==C+1)
+		to.se=1;
+	int x = to.fi;
+	int y = to.se;
+	if((x+y)%2==1 and food.find(to)==food.end()){
+		food.insert(to);
+		if(snake.find(to)!=snake.end()){
+			alright=0;
+			return;
+		}
+		Q.push_front(to);
+		snake.insert(to);
+	}
+	else{
+		pii tail = Q.back();
+		if(snake.find(to)!=snake.end() and to!=tail){
+			alright = 0;
+			return;
+		}
+		snake.erase(tail);
+		snake.insert(to);
+		Q.pop_back();
+		Q.push_front(to);
+	}
+}
+int what[1000000+100000+5];
+void init(){
+	alright=1;
+	direction = 2;
+
+	T = 1000000+100000;
+	for(int i=1;i<=T;++i)
+		what[i]=0;
+	while(not Q.empty())
+		Q.pop_back();
+	snake.clear();
+	food.clear();
+}
+lld solve(){
+	int S;
+	init();
+
+	Q.push_front(mpa(1,1));
+	snake.insert(mpa(1,1));
+
+	cin>>S>>R>>C;
+	int t;
+	char c;
+	for(int i=1;i<=S;++i){
+		cin>>t>>c;
+		if(c=='R')
+			what[t] = 1;
+		else
+			what[t] = -1;
+	}
+	for(int i=1;i<=T and alright;++i){
+		play();
+
+		if(what[i]!=0){
+			direction = direction + what[i];
+			if(direction==0)
+				direction = 4;
+			if(direction==5)
+				direction=1;
+		}
+		//cout<<i<<' '<<direction<<endl;
+		//cout<<i<<'\t'<<Q.front().fi<<' '<<Q.front().se<<'\t'<<Q.back().fi<<' '<<Q.back().se<<endl;
+	}
+	return Q.size();
+}
+int main()
+{
+	freopen("0.in","r",stdin);
+	freopen("0.out","w",stdout);
+
+	int T,test = 0;
+	cin>>T;
+
+	while(T--){
+		test++;
+		printf("Case #%d: %lld\n",test,solve());
+	}
+}
+
