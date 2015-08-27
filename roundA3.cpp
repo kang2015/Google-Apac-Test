@@ -1,3 +1,90 @@
+//my ans
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<vector>
+#include<iostream>
+#include<algorithm>
+#include<memory>
+#include<map>
+#include<queue>
+#include <sstream>
+#include <set>
+#include <list>
+using namespace std;
+class Node{
+public:
+    int vertex;
+    int dist;
+    int idx;
+    
+    Node(int _vertex, int _dist, int _idx){
+        vertex = _vertex;
+        dist = _dist;
+        idx = _idx;
+    }
+};
+void dijkstra(vector<list<Node> > &graph,int i,vector<bool> &edge,int num){
+    vector<bool> vis(num,false);
+    vector<long long> dist(num,INT64_MAX);
+    dist[i] = 0;
+    for(int i=0;i<num;i++){
+        int mi = -1;
+        for(int j=0;j<num;j++){
+            if(!vis[j]){
+                if(mi == -1 || dist[j] < dist[mi]){
+                    mi=j;
+                }
+            }
+        }
+        vis[mi] = true;
+        //cout<< "min dist is : "<< dist[mi] << endl;
+        for(auto it = graph[mi].begin();it!=graph[mi].end();it++){
+            if(dist[it->vertex] > dist[mi] + it->dist){
+                dist[it->vertex] = dist[mi] + it->dist;
+            }
+        }
+        
+    }
+    for(int i=0;i<num;i++){
+        for(auto it = graph[i].begin();it!=graph[i].end();it++){
+            if(dist[it->vertex] == dist[i] + it->dist){
+                edge[it->idx] = true;
+            }
+        }
+    }
+    
+}
+int main(){
+    int testcase = 0;
+    cin >> testcase;
+    for(int tcas=1;tcas<=testcase;tcas++){
+        int n=0,m=0;
+        cin >> n >> m;
+        vector<list<Node> > graph(n);
+        for(int i=0;i<m;i++){
+            int v1,v2,dist;
+            cin >> v1 >> v2 >> dist;
+            graph[v1].push_back(Node(v2,dist,i));
+            graph[v2].push_back(Node(v1,dist,i));
+        }
+        vector<bool> edge(m,false);
+        for(int i=0;i<n;i++)
+            dijkstra(graph,i,edge,n);
+        printf("Case #%d: \n", tcas);
+        for(int i=0;i<m;i++){
+            //cout << edge[i] << endl;
+            if(!edge[i]){
+                cout << i << endl;
+            }
+        }
+        
+    }
+    return 0;
+}
+
+//end of my ans
+
 // @author cebrusfs
 // headers {{{
 #include<bits/stdc++.h>
