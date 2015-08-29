@@ -1,3 +1,106 @@
+//@author kang2015
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<vector>
+#include<iostream>
+#include<algorithm>
+#include<memory>
+#include<map>
+#include<queue>
+#include <sstream>
+#include <set>
+#include <list>
+using namespace std;
+vector<int> d1 = {0,1,0,-1};
+vector<int> d2 = {1,0,-1,0};
+const int timeMax = 1e9;
+/*bool nofood(vector<vector<bool> > &board){
+ for(int i=0;i<board.size();i++)
+ for(int j=0;j<board[i].size();j++)
+ if(board[i][j]) return false;
+ return true;
+ }*/
+int main(){
+    int testcase = 0;
+    cin >> testcase;
+    for(int tcas=1;tcas<=testcase;tcas++){
+        int row=0,col=0,action =0;
+        cin >> action >> row >> col ;
+        vector<pair<int,char> > acts;
+        vector<vector<bool> > board(row,vector<bool>(col,true));
+        //cout << "test " << tcas << endl;
+        /*for(int i=0;i<row;i++)
+            for(int j=0;j<col;j++){
+                if(((i+j)&1) == 1){
+                    board[i][j]=true;
+                }
+            }*/
+        //vector<vector<int> > histDirection(row,vector<int>(col,-1));
+        //cout << "board end" << endl;
+        for(int i=0;i<action;i++){
+            int time = 0; char act;
+            cin >> time >> act;
+            acts.push_back(make_pair(time, act));
+        }
+        
+        //cout << "after initilize; \n";
+        set<pair<int,int> > snakeSet;
+        list<pair<int,int> > snakeList;
+        pair<int,int> pos = make_pair(0, 0);
+        int direction = 0;
+        int actIdx = 0;
+        long long food = ((long long)row*(long long)col)/2;
+        snakeList.push_back(pos);
+        snakeSet.insert(pos);
+        int cnt = 0;
+        for(int i=1;i<timeMax;i++){
+            if(actIdx==acts.size()){
+                cnt++;
+            }
+            int next1 = pos.first + d1[direction];
+            int next2 = pos.second + d2[direction];
+            if(next1 == row) next1 =0;
+            if(next1 == -1) next1 = row-1;
+            if(next2 == col) next2 =0;
+            if(next2 == -1) next2 = col-1;
+            //cout << "test "  << i << ", orignal snakesize: "<< snakeList.size() << endl;
+            //cout << next1 << " " << next2 << " "<< food << " " << actIdx << endl;
+            pair<int, int> next = make_pair(next1, next2);
+            if(((next1+next2)&1) == 1 && board[next1][next2]){
+                board[next1][next2] = false;
+                food --;
+            }else{
+                pair<int,int> tmp = snakeList.back();
+                snakeList.pop_back();
+                snakeSet.erase(tmp);
+            }
+            
+            snakeList.push_front(next);
+            if(snakeSet.count(next)){//bite self
+                break;
+            }
+            
+            snakeSet.insert(next);
+            if(food ==-1 ||( cnt > row && cnt > col)){
+                break;
+            }
+            if(actIdx < acts.size() && i == acts[actIdx].first){
+                direction += acts[actIdx].second == 'L'?-1:1;
+                if(direction == 4) direction = 0;
+                if(direction == -1) direction =3;
+                actIdx ++;
+                cnt = 0;
+            }
+            pos = next;
+            
+        }
+        printf("Case #%d: %lu\n", tcas,snakeList.size());
+    }
+    return 0;
+}
+
+
 // @author cebrusfs
 // headers {{{
 #include<bits/stdc++.h>
