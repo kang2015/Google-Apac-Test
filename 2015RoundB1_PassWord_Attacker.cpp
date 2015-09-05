@@ -5,7 +5,7 @@
 //  Created by 康炎丽 on 15/9/5.
 //  Copyright (c) 2015年 康炎丽. All rights reserved.
 //
-
+//using "combination"（排列组合） and "inclusion-exclusion principle"(容斥原理)
 #include<vector>
 #include<iostream>
 #include<math.h>
