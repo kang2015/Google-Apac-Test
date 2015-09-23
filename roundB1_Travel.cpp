@@ -1,3 +1,106 @@
+//my ans with priority queue
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<vector>
+#include<iostream>
+#include<algorithm>
+#include<memory>
+#include<map>
+#include<queue>
+#include <sstream>
+#include <set>
+#include <list>
+using namespace std;
+class Node{
+public:
+    int vertex;
+    int dist[24];
+    
+    
+    Node(int _vertex, int _dist[]){
+        vertex = _vertex;
+        for(int i=0;i<24;i++)
+            dist[i]=_dist[i];
+        
+    }
+};
+int dijkstra(vector<list<Node> > &graph,int source,int sink,int num,int time){
+    vector<bool> vis(num,false);
+    vector<int> dist(num,INT_MAX);
+    vector<int> times(num,-1);
+    dist[source] = 0;
+    times[source] = time;
+    priority_queue<pair<int,int>, vector<pair<int,int> >, greater<pair<int,int> > > q;
+    q.push(make_pair(0,0));
+    while(!q.empty()){
+        pair<int,int> cur=q.top();q.pop();
+        //cout << "min dist node is:"<< cur.first <<" " << q.size() <<endl;
+        int mi = cur.second;
+        if(dist[mi] == INT_MAX){
+            break;
+        }
+        if(vis[mi]){
+            continue;
+        }
+        vis[mi] = true;
+        if(mi == sink){
+            return dist[mi];
+        }
+        //int nextTime = (time + dist[mi])%24;
+        //cout<< "min dist is : "<< dist[mi] << endl;
+        for(auto it = graph[mi].begin();it!=graph[mi].end();it++){
+            if(dist[it->vertex] > dist[mi] + it->dist[times[mi]]){
+                dist[it->vertex] = dist[mi] + it->dist[times[mi]];
+                times[it->vertex] = (times[mi] + it->dist[times[mi]])%24;
+                q.push(make_pair(dist[it->vertex],it->vertex));
+                //cout << "push" << it->vertex << " "<< dist[it->vertex] << endl;
+            }
+        }
+        //time = nextTime;
+    }
+    return -1;
+    
+}
+int main(){
+    int testcase = 0;
+    cin >> testcase;
+    for(int tcas=1;tcas<=testcase;tcas++){
+        int n=0,m=0,k=0;
+        cin >> n >> m >> k;
+        vector<list<Node> > graph(n);
+        for(int i=0;i<m;i++){
+            int v1,v2;
+            int dist[24]={0};
+            cin >> v1 >> v2;
+            int tmp =0;
+            for(int j=0;j<24;j++){
+                cin >> tmp;
+                dist[j]=tmp;
+            }
+            graph[v1-1].push_back(Node(v2-1,dist));
+            graph[v2-1].push_back(Node(v1-1,dist));
+        }
+        printf("Case #%d:", tcas);
+        for(int i=0;i<k;i++){
+            int sink=0,time =0;
+            cin>>sink>>time;
+            cout << " "<< dijkstra(graph,0,sink-1,n,time) ;
+            
+        }
+        cout << endl;
+        
+        
+    }
+    return 0;
+}
+
+//end of my ans
+
+
+
+
+
 //my ans
 #include<cstdio>
 #include<cstring>
@@ -92,7 +195,7 @@ int main(){
     }
     return 0;
 }
-//end of my ans
+//end of my ans with priority queue
 
 #include <cstdio>
 #include <climits>
