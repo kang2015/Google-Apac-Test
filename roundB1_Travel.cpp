@@ -40,9 +40,9 @@ int dijkstra(vector<list<Node> > &graph,int source,int sink,int num,int time){
         if(dist[mi] == INT_MAX){
             break;
         }
-        if(vis[mi]){
+        /*if(vis[mi]){
             continue;
-        }
+        }*/
         vis[mi] = true;
         if(mi == sink){
             return dist[mi];
@@ -50,7 +50,7 @@ int dijkstra(vector<list<Node> > &graph,int source,int sink,int num,int time){
         //int nextTime = (time + dist[mi])%24;
         //cout<< "min dist is : "<< dist[mi] << endl;
         for(auto it = graph[mi].begin();it!=graph[mi].end();it++){
-            if(dist[it->vertex] > dist[mi] + it->dist[times[mi]]){
+            if(!vis[it->vertex] && dist[it->vertex] > dist[mi] + it->dist[times[mi]]){
                 dist[it->vertex] = dist[mi] + it->dist[times[mi]];
                 times[it->vertex] = (times[mi] + it->dist[times[mi]])%24;
                 q.push(make_pair(dist[it->vertex],it->vertex));
