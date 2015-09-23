@@ -40,9 +40,9 @@ int dijkstra(vector<list<Node> > &graph,int source,int sink,int num,int time){
         if(dist[mi] == INT_MAX){
             break;
         }
-        /*if(vis[mi]){
+        if(vis[mi]){
             continue;
-        }*/
+        }
         vis[mi] = true;
         if(mi == sink){
             return dist[mi];
